@@ -16,8 +16,11 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
 public class SecureURLReader {
+    public SecureURLReader() {
+    }
 
-    public static void main(String[] args) {
+    public static String makeGet(String URL) {
+        String response = "";
         try {
 
             // Create a file and a password representation
@@ -47,11 +50,11 @@ public class SecureURLReader {
             SSLContext.setDefault(sslContext);
 
             // We can now read this URL
-            readURL("https://localhost:5000/users");
+            response = readURL(URL);
 
             // This one can't be read because the Java default truststore has been
             // changed.
-            readURL("https://www.google.com");
+            //readURL("https://www.google.com");
 
         } catch (KeyStoreException ex) {
             Logger.getLogger(SecureURLReader.class.getName()).log(Level.SEVERE, null, ex);
@@ -66,10 +69,11 @@ public class SecureURLReader {
         } catch (KeyManagementException ex) {
             Logger.getLogger(SecureURLReader.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        return response;
     }
 
-    public static void readURL(String sitetoread) {
+    public static String readURL(String sitetoread) {
+        StringBuffer response = new StringBuffer();
         try {
             // Crea el objeto que representa una URL2
             URL siteURL = new URL(sitetoread);
@@ -101,10 +105,12 @@ public class SecureURLReader {
             String inputLine = null;
             while ((inputLine = reader.readLine()) != null) {
                 System.out.println(inputLine);
+                response.append(inputLine);
             }
         } catch (IOException x) {
             System.err.println(x);
         }
+        return response.toString();
     }
 }
 

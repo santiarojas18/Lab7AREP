@@ -13,11 +13,13 @@ import static spark.Spark.*;
 public class UserController
 {
     public static void main( String[] args ) throws NoSuchAlgorithmException {
-        secure("certificados/ecikeystore.p12", "123456", null, null);
+        secure("certificados/ecikeystoreusers.p12", "123456", null, null);
         port(getPort());
         UserDB userDB = UserDB.getInstance();
-        UserDTO userToAdd = new UserDTO("Santiago", "Arevalo", "santiar18@hotmail.com", "Colombia18*");
+        UserDTO userToAdd = new UserDTO("Santiago", "Arevalo", "santiar18@hotmail.com", "Santi123");
+        UserDTO userToAdd2 = new UserDTO("Julieta", "Rojas", "julieta12@hotmail.com", "Juli123");
         userDB.add(userToAdd);
+        userDB.add(userToAdd2);
 
         get("/login", (req, res) -> {
             String email = req.queryParams("email");
@@ -51,13 +53,12 @@ public class UserController
         });
 
         post("/users", (req, res) -> {
-           String jsonBody = req.body();
-           Gson gson = new Gson();
-           UserDTO userDTO = gson.fromJson(jsonBody, UserDTO.class);
-           return userDB.add(userDTO);
+            String jsonBody = req.body();
+            Gson gson = new Gson();
+            UserDTO userDTO = gson.fromJson(jsonBody, UserDTO.class);
+            return userDB.add(userDTO);
         });
 
-        get("/hello", (req, res) -> "Hello world");
     }
 
     static int getPort() {
